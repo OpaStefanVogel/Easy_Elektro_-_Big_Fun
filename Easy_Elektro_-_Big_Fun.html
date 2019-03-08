@@ -9,11 +9,41 @@
 <div style="display:none">
 ok textarea
   </div>
+<div>
+<button onclick="neu_berechnen()">neu berechnen:</button>
+  </div>
 <div><textarea id="Rechenweg" onkeydown="Keycode(event)" cols="80" rows="15" style="fontsize:30%;">R(1,2,100); 
 R(3,4,100); 
 U(1,4,10); 
 U(2,3,0); 
 </textarea></div>
 
+<div id="Programm" style="display:none">
+<ol style="border:solid; background:WhiteSmoke"><li onclick="Klick_auf_Gliederungspunkt(event)">Liste der globalen Variablen
+<script id="scr" type="application/ecmascript">
+var A=[[1]]; //Matrix
+var Rechenweg="";
+
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Button neu rechnen
+<script id="scr" type="application/ecmascript">
+function R(i,j,r) { V(i,j,i,j,r) }
+function T(i,j,k,r) { V(i,j,k,j,r) }
+function V(i,j,k,l,r) {
+  alert("V("+i+","+j+","+k+","+l+","+r+");");
+  }
+
+function U(i,j,u) {
+  alert("U("+i+","+j+","+u+");");
+  }
+
+function neu_berechnen() {
+  alert("los gehts");
+  Rechenweg=document.getElementById("Rechenweg").value;
+  eval(Rechenweg);
+  alert("und fertig");
+  }
+
+</script></li></div>
+  </ol>
   </body>
   </html>
