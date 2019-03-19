@@ -6,8 +6,9 @@
 
 <body>
 <p>Hallo ist hier jemand?</p>
-<div style="display:none">
+<div style="display:none">Verlauf:
 ok textarea
+ok erstes Beispiel ist gerechnet
   </div>
 <div>
 <button onclick="neu_berechnen()">neu berechnen:</button>
@@ -17,32 +18,135 @@ R(3,4,100);
 U(1,4,10); 
 U(2,3,0); 
 </textarea></div>
+<div id="Ergebnis"> </div>
 
 <div id="Programm" style="display:none">
 <ol style="border:solid; background:WhiteSmoke"><li onclick="Klick_auf_Gliederungspunkt(event)">Liste der globalen Variablen
 <script id="scr" type="application/ecmascript">
 var A=[[1]]; //Matrix
+var b=[0]; //rechte Seite
+var x=[0]; //Ergebnis;
 var Rechenweg="";
+var n=0;
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Button neu rechnen
 <script id="scr" type="application/ecmascript">
 function R(i,j,r) { V(i,j,i,j,r) }
 function T(i,j,k,r) { V(i,j,k,j,r) }
 function V(i,j,k,l,r) {
-  alert("V("+i+","+j+","+k+","+l+","+r+");");
+  //alert("V("+i+","+j+","+k+","+l+","+r+");");
+  n=Math.max(i,j,k,l,n); //alert("n="+n);
+  if (A[i]==undefined) A[i]=[];
+  if (A[i][k]==undefined) A[i][k]=1/r; else A[i][k]=A[i][k]+1/r;
+  if (A[i][l]==undefined) A[i][l]=-1/r; else A[i][l]=A[i][l]-1/r;
+  if (A[j]==undefined) A[j]=[];
+  if (A[j][k]==undefined) A[j][k]=-1/r; else A[j][k]=A[j][k]-1/r;
+  if (A[j][l]==undefined) A[j][l]=1/r; else A[j][l]=A[j][l]+1/r;
   }
 
 function U(i,j,u) {
-  alert("U("+i+","+j+","+u+");");
+  //alert("U("+i+","+j+","+u+");");
+  n=n+1;
+  A[n]=[];
+  A[n][i]=1;
+  A[n][j]=-1;
+  A[i][n]=1;
+  A[j][n]=-1;
+  b[n]=u;
   }
 
 function neu_berechnen() {
-  alert("los gehts");
+  //alert("los gehts");
+  A=[[1]]; b=[0]; n=0;
   Rechenweg=document.getElementById("Rechenweg").value;
   eval(Rechenweg);
-  alert("und fertig");
+  A[1][1]=A[1][1]+1;
+  //alert(A.join("\n")+"\nb="+b+"\nn="+n);
+  for (var i=0;i<=n;i++) {
+    if (b[i]==undefined) b[i]=0;
+    if (A[i]==undefined) A[i]=[];
+    for (var j=0;j<=n;j++) {
+      if (A[i][j]==undefined) A[i][j]=0;
+      }
+    }
+  //alert(A.join("\n")+"\nb="+b+"\nn="+n);
+  x=gauss(A,b);
+  //alert(x.join("\n"));
+  //alert("und fertig");
+  document.getElementById("Ergebnis").innerHTML=x.join("<br/>");
   }
 
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Gauß-Algorithmus von <a href="https://github.com/itsravenous/gaussian-elimination">https://github.com/itsravenous/gaussian-elimination</a>
+<script id="scr" type="application/ecmascript">
+var abs = Math.abs;
+
+function array_fill(i, n, v) {
+    var a = [];
+    for (; i < n; i++) {
+        a.push(v);
+    }
+    return a;
+}
+
+/**
+ * Gaussian elimination
+ * @param  array A matrix
+ * @param  array x vector
+ * @return array x solution vector
+ */
+function gauss(A, x) {
+
+    var i, k, j;
+
+    // Just make a single matrix
+    for (i=0; i < A.length; i++) { 
+        A[i].push(x[i]);
+    }
+    var n = A.length;
+
+    for (i=0; i < n; i++) { 
+        // Search for maximum in this column
+        var maxEl = abs(A[i][i]),
+            maxRow = i;
+        for (k=i+1; k < n; k++) { 
+            if (abs(A[k][i]) > maxEl) {
+                maxEl = abs(A[k][i]);
+                maxRow = k;
+            }
+        }
+
+
+        // Swap maximum row with current row (column by column)
+        for (k=i; k < n+1; k++) { 
+            var tmp = A[maxRow][k];
+            A[maxRow][k] = A[i][k];
+            A[i][k] = tmp;
+        }
+
+        // Make all rows below this one 0 in current column
+        for (k=i+1; k < n; k++) { 
+            var c = -A[k][i]/A[i][i];
+            for (j=i; j < n+1; j++) { 
+                if (i===j) {
+                    A[k][j] = 0;
+                } else {
+                    A[k][j] += c * A[i][j];
+                }
+            }
+        }
+    }
+
+    // Solve equation Ax=b for an upper triangular matrix A
+    x = array_fill(0, n, 0);
+    for (i=n-1; i > -1; i--) { 
+        x[i] = A[i][n]/A[i][i];
+        for (k=i-1; k > -1; k--) { 
+            A[k][n] -= A[k][i] * x[i];
+        }
+    }
+
+    return x;
+}
 </script></li></div>
   </ol>
   </body>
