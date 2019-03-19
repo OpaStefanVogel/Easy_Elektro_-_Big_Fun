@@ -28,6 +28,8 @@ var b=[0]; //rechte Seite
 var x=[0]; //Ergebnis;
 var Rechenweg="";
 var n=0;
+var Umax=0; //größte Batteriespannung zwecks Massepunktfestlegung
+var Masse=1; //Index Massepunkt
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Button neu rechnen
 <script id="scr" type="application/ecmascript">
@@ -53,6 +55,8 @@ function U(i,j,u) {
   A[i][n]=1;
   A[j][n]=-1;
   b[n]=u;
+  if (Umax<u) {Umax=u; Masse=j}
+  if (Umax<-u) {Umax=-u; Masse=i}
   }
 
 function neu_berechnen() {
@@ -60,7 +64,7 @@ function neu_berechnen() {
   A=[[1]]; b=[0]; n=0;
   Rechenweg=document.getElementById("Rechenweg").value;
   eval(Rechenweg);
-  A[1][1]=A[1][1]+1;
+  A[Masse][Masse]=A[Masse][Masse]+1;
   //alert(A.join("\n")+"\nb="+b+"\nn="+n);
   for (var i=0;i<=n;i++) {
     if (b[i]==undefined) b[i]=0;
