@@ -10,14 +10,15 @@
 ok textarea
 ok erstes Beispiel ist gerechnet
 .. I(i,j,strom) ergibt am Massepunkt Spannung ungleich 0.
+ok nanf=70 geht schon mal, das ist gut.
   </div>
 <div>
 <button onclick="neu_berechnen()">neu berechnen:</button>
   </div>
 <div><textarea id="Rechenweg" onkeydown="Keycode(event)" cols="80" rows="15" style="fontsize:30%;">R(1,2,100); 
 R(3,4,100);
-I(4,1,0.05);  
-//U(1,4,10); 
+//I(4,1,0.05);  
+U(1,4,10); 
 U(2,3,0); 
 </textarea></div>
 <div id="Ergebnis"> </div>
@@ -29,7 +30,8 @@ var A=[[1]]; //Matrix
 var b=[0]; //rechte Seite
 var x=[0]; //Ergebnis;
 var Rechenweg="";
-var n=0;
+var nanf=70; //Anfangsgröße von A
+var n=nanf;
 var Umax=0; //größte Batteriespannung zwecks Massepunktfestlegung
 var Masse=1; //Index Massepunkt
 
@@ -48,8 +50,8 @@ function V(i,j,k,l,r) {
   if (A[j][l]==undefined) A[j][l]=1/r; else A[j][l]=A[j][l]+1/r;
   }
 
-function U(i,j,u) {
-  //alert("U("+i+","+j+","+u+");");
+function U(j,i,u) {
+  //alert("U("+j+","+i+","+u+");");
   n=n+1;
   A[n]=[];
   A[n][i]=1;
@@ -69,7 +71,12 @@ function I(i,j,Strom) {
 
 function neu_berechnen() {
   //alert("los gehts");
-  A=[[1]]; b=[0]; n=0;
+  A=[]; b=[]; n=nanf;
+  for (i=0;i<=n;i++) {
+    A[i]=[]; b[i]=0;
+    for (j=0;j<=n;j++) if (i==j) A[i][j]=0.00000000001; else A[i][j]=0;
+    }
+  //alert(A.join("\n"));
   Rechenweg=document.getElementById("Rechenweg").value;
   eval(Rechenweg);
   A[Masse][Masse]=A[Masse][Masse]+1;
