@@ -11,7 +11,24 @@ ok textarea
 ok erstes Beispiel ist gerechnet
 .. I(i,j,strom) ergibt am Massepunkt Spannung ungleich 0.
 ok nanf=70 geht schon mal, das ist gut.
+ok Grundplatte
   </div>
+<svg id="Grundplatte" 
+  width="800" height="420" 
+  viewBox="0 0 800 420" 
+  style="border:solid 0.1px lightgrey" 
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Grundplatte</title>
+  <defs>
+    <g id="Steckplatz">
+      <circle x="0" y="0" r="30" fill="Snow"/>
+      <circle x="0" y="0" r="10"/>
+      </g>
+    </defs>
+  <use xlink:href="#Steckplatz" x="100" y="100" fill="green"/>  
+  <use xlink:href="#Steckplatz" x="200" y="100" fill="red"/>  
+  </svg>
 <div>
 <button onclick="neu_berechnen()">neu berechnen:</button>
   </div>
