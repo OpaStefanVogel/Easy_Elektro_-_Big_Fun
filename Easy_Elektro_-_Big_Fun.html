@@ -9,13 +9,15 @@
 <div style="display:none">Verlauf:
 ok textarea
 ok erstes Beispiel ist gerechnet
+.. I(i,j,strom) ergibt am Massepunkt Spannung ungleich 0.
   </div>
 <div>
 <button onclick="neu_berechnen()">neu berechnen:</button>
   </div>
 <div><textarea id="Rechenweg" onkeydown="Keycode(event)" cols="80" rows="15" style="fontsize:30%;">R(1,2,100); 
-R(3,4,100); 
-U(1,4,10); 
+R(3,4,100);
+I(4,1,0.05);  
+//U(1,4,10); 
 U(2,3,0); 
 </textarea></div>
 <div id="Ergebnis"> </div>
@@ -57,6 +59,12 @@ function U(i,j,u) {
   b[n]=u;
   if (Umax<u) {Umax=u; Masse=j}
   if (Umax<-u) {Umax=-u; Masse=i}
+  }
+
+function I(i,j,Strom) {
+  //alert("I("+i+","+j+","+Strom+");");
+  if (b[i]==undefined) b[i]=Strom; else b[i]=b[i]+Strom; 
+  if (b[j]==undefined) b[j]=Strom; else b[j]=b[i]-Strom; 
   }
 
 function neu_berechnen() {
