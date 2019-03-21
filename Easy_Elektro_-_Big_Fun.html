@@ -34,6 +34,15 @@ ok Einsetzen Draht,
       <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
       <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
       </g>      
+    <g id="Bauteil_Batterie" transform="translate(400,300)">
+      <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="none"/>
+      </g>
+    <g id="Bauteil_Lampe" transform="translate(400,300)" CODE="R(0,2,100)">
+      <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="none"/>
+      </g>
+    <g id="Bauteil_Schalter" transform="translate(400,300)">
+      <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="none"/>
+      </g>
     </defs>
   <g id="Schaltung">
     </g>
@@ -246,7 +255,7 @@ function Klick_auf_Steckplatz() {
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil einsetzen
 <script id="scr" type="application/ecmascript">
-var Bauteil="Draht";
+var Bauteil="Lampe"; //"Batterie"; //"Draht";
 function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   //alert("Bauteil einsetzen von "+Klickpunkt1+" nach "+Klickpunkt2);
   if (Bauteil=="") return;
@@ -254,10 +263,12 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   var nach=eval(Klickpunkt2);
   var Bild=document.getElementById("Bauteil_"+Bauteil).cloneNode(true);
   var transform="translate("+(von[1]*100)+","+(von[0]*100)+") ";
-  if (von[0]==nach[0]&&von[1]>nach[1]) transform=transform+"rotate(180)";
-  if (von[1]==nach[1]&&von[0]>nach[0]) transform=transform+"rotate(270)";
-  if (von[1]==nach[1]&&von[0]<nach[0]) transform=transform+"rotate(90)";
-  //alert(transform+" "+von+" "+nach);
+  var Richtung=[0,1,0];
+  if (von[1]==nach[1]&&von[0]<nach[0]) Richtung=[1,0,1];
+  if (von[0]==nach[0]&&von[1]>nach[1]) Richtung=[0,-1,2];
+  if (von[1]==nach[1]&&von[0]>nach[0]) Richtung=[-1,0,3];
+  transform=transform+"rotate("+(Richtung[2]*90)+")";
+  alert(transform+" "+von+" "+nach);
   Bild.setAttribute("transform",transform);
   var Schaltung=document.getElementById("Schaltung");
   Schaltung.appendChild(Bild);
