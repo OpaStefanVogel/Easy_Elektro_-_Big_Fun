@@ -16,6 +16,11 @@ ok Steckplätze
 ok Klickpunkte
 ok Einsetzen Draht, Batterie, Lampe, Schalter
 ok Baukasten, Buttons "Erzeugen" und "Ausrechnen"
+ok nur benötigte Klickpunkte in den Vordergrund bringen
+.. wenn zweiter Klickpunkt daneben, gar nichts zeichnen
+.. anstelle "von nach" gleich "von Richtung" machen
+.. angeklicktes Baukastenelement markieren
+.. id in class umwandeln
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -25,19 +30,19 @@ ok Baukasten, Buttons "Erzeugen" und "Ausrechnen"
   xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Grundplatte</title>
   <g onclick="Bauteil=event.target.parentNode.getAttribute('id').slice(8)">
-    <g id="Bauteil_Draht" transform="translate(100,100)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001">
+    <g id="Bauteil_Draht" transform="translate(100,100)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]">
       <circle cx="0" cy="0" r="20" fill="Blue"/>
       <circle cx="100" cy="0" r="20" fill="Blue"/>
       <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
       <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
       </g>      
-    <g id="Bauteil_Batterie" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3">
+    <g id="Bauteil_Batterie" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
       </g>
-    <g id="Bauteil_Lampe" transform="translate(500,100)" code="R(ind(0,0),ind(0,2),value)" value="100">
+    <g id="Bauteil_Lampe" transform="translate(500,100)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
       </g>
-    <g id="Bauteil_Schalter" transform="translate(800,100)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001">
+    <g id="Bauteil_Schalter" transform="translate(800,100)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
       </g>
     </g>
@@ -58,7 +63,7 @@ ok Baukasten, Buttons "Erzeugen" und "Ausrechnen"
     </defs>
   <g id="Schaltung"> </g>
   <g id="Steckplaetze" onclick="Klick_auf_Steckplatz()" fill="gray">
-    </g>  
+    </g>
   </svg>
 <div>
 <button onclick="Erzeugen()">Erzeugen</button>
@@ -286,26 +291,52 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   Bild.setAttribute("transform",transform);
   Bild.setAttribute("Klickpunkt",Klickpunkt1);
   Bild.setAttribute("Richtung","["+Richtung+"]");
-  var Schaltung=document.getElementById("Schaltung");
+  var Schaltung=document.getElementById("Steckplaetze");
   Schaltung.appendChild(document.createTextNode("\n    "));
   Schaltung.appendChild(Bild);
+  var Klickpunkte=eval(Bild.getAttribute("klickpunkte"));
+  //alert(von+" "+Klickpunkte+" "+Richtung);
+  var Kx=0;
+  var Ky=0;
+  var Kn="";
+  for (var KLP=0;KLP<Klickpunkte.length;KLP++) {
+    if (Richtung[2]==0) { //[0,1,0]
+      Ky=von[0]+Klickpunkte[KLP][0];
+      Kx=von[1]+Klickpunkte[KLP][1];
+      }
+    if (Richtung[2]==1) { //[1,0,1]
+      Ky=von[0]+Klickpunkte[KLP][1];
+      Kx=von[1]-Klickpunkte[KLP][0];
+      }
+    if (Richtung[2]==2) { //[0,-1,2]
+      Ky=von[0]-Klickpunkte[KLP][0];
+      Kx=von[1]-Klickpunkte[KLP][1];
+      }
+    if (Richtung[2]==3) { //[-1,0,3]
+      Ky=von[0]-Klickpunkte[KLP][1];
+      Kx=von[1]+Klickpunkte[KLP][0];
+      }
+    //alert([Kx,Ky]);
+    Kn=document.getElementById("["+[Ky,Kx]+"]");
+    Schaltung.appendChild(document.createTextNode("\n    "));
+    Schaltung.appendChild(Kn);
+    }
   document.getElementById("Logfile").firstChild.nodeValue=xm.serializeToString(Schaltung);
   }
 
-</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil einsetzen
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Rechenweg erzeugen
 <script id="scr" type="application/ecmascript">
 function Erzeugen(){
-  var Liste=document.getElementById("Schaltung").getElementsByTagName("g");
+  var Liste=document.getElementById("Steckplaetze").getElementsByTagName("g");
   var Code="";
-  for (var i=0;i<Liste.length;i++) {
-    var DZ=Liste[i];
+  for (var i=0;i<Liste.length;i++) { var DZ=Liste[i]; if (DZ.hasAttribute("Klickpunkt")) {
     Code=Code
       +"Klickpunkt="+DZ.getAttribute("Klickpunkt")+"; "
       +"Richtung="+DZ.getAttribute("Richtung")+"; "
       +"value="+DZ.getAttribute("value")+"; "
       +DZ.getAttribute("code")+"; "
       +"//"+DZ.getAttribute("id")+"\n";
-    }
+    } }
   //alert(Code);
   document.getElementById("Rechenweg").value=Code;
   }
@@ -316,7 +347,7 @@ function ind(i,j) {
   if (Richtung[2]==1) ret=ret+10*j+i;
   if (Richtung[2]==2) ret=ret-10*i-j;
   if (Richtung[2]==3) ret=ret-10*j-i;
-  alert(ret);
+  //alert(ret);
   return ret;
   }
 </script></li></div>
