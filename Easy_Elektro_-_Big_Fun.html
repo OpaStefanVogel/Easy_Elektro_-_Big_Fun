@@ -18,9 +18,11 @@ ok Einsetzen Draht, Batterie, Lampe, Schalter
 ok Baukasten, Buttons "Erzeugen" und "Ausrechnen"
 ok nur benötigte Klickpunkte in den Vordergrund bringen
 ok id in class umwandeln
-.. wenn zweiter Klickpunkt daneben, gar nichts zeichnen
+ok Anfangsschaltung behelfsmäßig im svg (alle Klickpunkte oben)
+.. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
+.. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
-.. angeklicktes Baukastenelement markieren
+.. angeklicktes Baukastenelement markieren, mit Anfangsklickpunkt
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -63,6 +65,42 @@ ok id in class umwandeln
     </defs>
   <g id="Schaltung"> </g>
   <g id="Steckplaetze" onclick="Klick_auf_Steckplatz()" fill="gray">
+    <g class="Bauteil_Batterie" transform="translate(800,500) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]" klickpunkt="[5,8]" richtung="[-1,0,3]">
+      <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
+      </g>
+    <g class="Bauteil_Schalter" transform="translate(800,200) rotate(180)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" klickpunkte="[[0,0],[0,2]]" klickpunkt="[2,8]" richtung="[0,-1,2]">
+      <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
+      </g>
+    <g class="Bauteil_Lampe" transform="translate(500,200) rotate(90)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" klickpunkt="[2,5]" richtung="[1,0,1]">
+      <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
+      </g>
+    <g class="Bauteil_Lampe" transform="translate(500,500) rotate(0)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" klickpunkt="[5,5]" richtung="[0,1,0]">
+      <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
+      </g>
+    <g class="Bauteil_Draht" transform="translate(800,300) rotate(270)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]" klickpunkt="[3,8]" richtung="[-1,0,3]">
+      <circle cx="0" cy="0" r="20" fill="Blue"/>
+      <circle cx="100" cy="0" r="20" fill="Blue"/>
+      <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
+      <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
+      </g>
+    <g class="Bauteil_Draht" transform="translate(600,200) rotate(180)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]" klickpunkt="[2,6]" richtung="[0,-1,2]">
+      <circle cx="0" cy="0" r="20" fill="Blue"/>
+      <circle cx="100" cy="0" r="20" fill="Blue"/>
+      <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
+      <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
+      </g>
+    <g class="Bauteil_Draht" transform="translate(500,400) rotate(90)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]" klickpunkt="[4,5]" richtung="[1,0,1]">
+      <circle cx="0" cy="0" r="20" fill="Blue"/>
+      <circle cx="100" cy="0" r="20" fill="Blue"/>
+      <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
+      <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
+      </g>
+    <g class="Bauteil_Draht" transform="translate(700,500) rotate(0)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]" klickpunkt="[5,7]" richtung="[0,1,0]">
+      <circle cx="0" cy="0" r="20" fill="Blue"/>
+      <circle cx="100" cy="0" r="20" fill="Blue"/>
+      <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
+      <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
+      </g>
     </g>
   </svg>
 <div>
@@ -291,8 +329,8 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   Bild.setAttribute("class",Bild.getAttribute("id"));
   Bild.removeAttribute("id");
   Bild.setAttribute("transform",transform);
-  Bild.setAttribute("Klickpunkt",Klickpunkt1);
-  Bild.setAttribute("Richtung","["+Richtung+"]");
+  Bild.setAttribute("klickpunkt",Klickpunkt1);
+  Bild.setAttribute("richtung","["+Richtung+"]");
   var Schaltung=document.getElementById("Steckplaetze");
   Schaltung.appendChild(document.createTextNode("\n    "));
   Schaltung.appendChild(Bild);
@@ -332,10 +370,11 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
 function Erzeugen(){
   var Liste=document.getElementById("Steckplaetze").getElementsByTagName("g");
   var Code="";
-  for (var i=0;i<Liste.length;i++) { var DZ=Liste[i]; if (DZ.hasAttribute("Klickpunkt")) {
+  //alert(Liste.length);
+  for (var i=0;i<Liste.length;i++) { var DZ=Liste[i]; if (DZ.hasAttribute("klickpunkt")) {
     Code=Code
-      +"Klickpunkt="+DZ.getAttribute("Klickpunkt")+"; "
-      +"Richtung="+DZ.getAttribute("Richtung")+"; "
+      +"Klickpunkt="+DZ.getAttribute("klickpunkt")+"; "
+      +"Richtung="+DZ.getAttribute("richtung")+"; "
       +"value="+DZ.getAttribute("value")+"; "
       +DZ.getAttribute("code")+"; "
       +"//"+DZ.getAttribute("class")+"\n";
