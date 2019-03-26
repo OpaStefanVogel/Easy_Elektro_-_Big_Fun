@@ -19,6 +19,7 @@ ok Baukasten, Buttons "Erzeugen" und "Ausrechnen"
 ok nur benötigte Klickpunkte in den Vordergrund bringen
 ok id in class umwandeln
 ok Anfangsschaltung behelfsmäßig im svg (alle Klickpunkte oben)
+ok function Ergebnis_in_Grafik_ausgeben()
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
@@ -61,6 +62,7 @@ ok Anfangsschaltung behelfsmäßig im svg (alle Klickpunkte oben)
     <g id="Steckplatz">
       <circle x="0" y="0" r="10"/>
       <rect x="-50" y="-50" width="100" height="100" fill="white" opacity="0"/>
+      <text id="t" x="15" y="-15">0</text>
       </g>
     </defs>
   <g id="Schaltung"> </g>
@@ -187,6 +189,7 @@ function neu_berechnen() {
   //alert(x.join("\n"));
   //alert("und fertig");
   document.getElementById("Ergebnis").innerHTML=x.join("<br/>");
+  Ergebnis_in_Grafik_ausgeben(x);
   }
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Gauß-Algorithmus von <a href="https://github.com/itsravenous/gaussian-elimination">https://github.com/itsravenous/gaussian-elimination</a>
@@ -392,6 +395,27 @@ function ind(i,j) {
   //alert(ret);
   return ret;
   }
+
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Rechenweg erzeugen
+<script id="scr" type="application/ecmascript">
+function Ergebnis_in_Grafik_ausgeben() {
+  //alert("Ergebnis_in_Grafik_ausgeben()");
+  for (var i=1;i<=7;i++) {
+    for (var j=1;j<=10;j++) {
+      var t=document.getElementById("["+i+","+j+"]").getElementsByTagName("text")[0];
+      //alert(i+" "+j+" "+t+" "+x[10*(i-1)+j-1]);
+      var erg=x[10*(i-1)+j-1].toFixed(2);
+      if (erg=="0.00") erg=" ";
+      if (erg=="-0.00") erg=" ";
+      if (erg.slice(-1)=="0") erg=erg.slice(0,-1);
+      if (erg.slice(-1)=="0") erg=erg.slice(0,-1);
+      if (erg.slice(-1)==".") erg=erg.slice(0,-1);
+      if (erg!=" ") erg=erg+" V";
+      t.firstChild.nodeValue=erg;
+      }
+    }  
+  }
+
 </script></li></div>
   </ol>
   </body>
