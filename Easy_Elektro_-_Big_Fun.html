@@ -20,10 +20,12 @@ ok nur benötigte Klickpunkte in den Vordergrund bringen
 ok id in class umwandeln
 ok Anfangsschaltung behelfsmäßig im svg (alle Klickpunkte oben)
 ok function Ergebnis_in_Grafik_ausgeben()
+ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
-.. angeklicktes Baukastenelement markieren, mit Anfangsklickpunkt
+.. statt Bauteil_Draht nur Draht
+.. NaN bei vereinzeltem Draht
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -31,9 +33,9 @@ ok function Ergebnis_in_Grafik_ausgeben()
   style="border:solid 0.1px lightgrey" 
   xmlns="http://www.w3.org/2000/svg" 
   xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Grundplatte</title>
-  <g onclick="Bauteil=event.target.parentNode.getAttribute('id').slice(8)">
-    <g id="Bauteil_Draht" class="" transform="translate(100,100)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]">
+  <title>Baukasten</title>
+  <g onclick="Bauteil_in_Baukasten_auswaehlen()">
+    <g id="Bauteil_Draht" class="" transform="translate(200,250) rotate(270)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]">
       <circle cx="0" cy="0" r="20" fill="Blue"/>
       <circle cx="100" cy="0" r="20" fill="Blue"/>
       <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
@@ -42,12 +44,16 @@ ok function Ergebnis_in_Grafik_ausgeben()
     <g id="Bauteil_Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
       </g>
-    <g id="Bauteil_Lampe" class="" transform="translate(500,100)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]">
+    <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
       </g>
-    <g id="Bauteil_Schalter" class="" transform="translate(800,100)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" klickpunkte="[[0,0],[0,2]]">
+    <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
       </g>
+    </g>
+  <g id="Pfeil" stroke="red" fill="red" stroke-width="5">
+    <line x1="0" y1="0" x2="100" y2="0"/>
+    <polygon points="110,0 100,10 100,-10"/>
     </g>
   </svg>
 
@@ -416,6 +422,13 @@ function Ergebnis_in_Grafik_ausgeben() {
     }  
   }
 
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil_in_Baukasten_auswaehlen()
+<script id="scr" type="application/ecmascript">
+function Bauteil_in_Baukasten_auswaehlen() {
+  Bauteil=event.target.parentNode.getAttribute('id').slice(8);
+  //alert(Bauteil+" "+event.target.parentNode.getAttribute('transform'));
+  document.getElementById("Pfeil").setAttribute("transform",event.target.parentNode.getAttribute('transform'));
+  }
 </script></li></div>
   </ol>
   </body>
