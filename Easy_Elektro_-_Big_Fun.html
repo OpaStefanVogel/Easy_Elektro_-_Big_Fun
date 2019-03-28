@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   </head>
 
-<body onload="onload()">
+<body onload="Aufbauen()">
 <p>Hallo ist hier jemand?</p>
 <div style="display:none">Verlauf:
 ok textarea
@@ -22,6 +22,7 @@ ok Anfangsschaltung behelfsmäßig im svg (alle Klickpunkte oben)
 ok und jetzt aus Aufbauweg-Fenster heraus
 ok function Ergebnis_in_Grafik_ausgeben()
 ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
+ok Abbauen geht auch
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
@@ -52,7 +53,7 @@ ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
       </g>
     </g>
-  <g id="Pfeil" stroke="red" fill="red" stroke-width="5">
+  <g id="Pfeil" stroke="red" fill="red" stroke-width="5" transform="translate(300,250) rotate(270)">
     <line x1="0" y1="0" x2="100" y2="0"/>
     <polygon points="110,0 100,10 100,-10"/>
     </g>
@@ -78,6 +79,7 @@ ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
   </svg>
 <div>
 <button onclick="Aufbauen()">Aufbauen</button>
+<button onclick="Abbauen()">Abbauen</button>
   </div>
 <div><textarea id="Aufbauweg" onkeydown="Keycode(event)" cols="100" rows="15" style="fontsize:30%;">Setz_ein("Batterie",[5,8],[-1,0,3]);
 Setz_ein("Schalter",[3,5],[0,1,0]);
@@ -248,8 +250,9 @@ function gauss(A, x) {
 }
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">onload
 <script id="scr" type="application/ecmascript">
-function onload() {
+function onloadfun() {
   var DX=document.getElementById("Steckplaetze");
+  while (DX.lastChild) DX.removeChild(DX.lastChild);
   var DY=document.getElementById("Steckplatz");
   for (var i=1;i<=7;i++) {
     for (var j=1;j<=10;j++) {
@@ -260,6 +263,7 @@ function onload() {
       DX.appendChild(DZ);
       }
     }
+  Umax=0;
   }
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Klickpunkte
 <script id="scr" type="application/ecmascript">
@@ -298,7 +302,7 @@ function Klick_auf_Steckplatz() {
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil einsetzen
 <script id="scr" type="application/ecmascript">
-var Bauteil="Lampe"; //"Batterie"; //"Draht";
+var Bauteil="Batterie"; //"Draht";
 function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   //alert("Bauteil einsetzen von "+Klickpunkt1+" nach "+Klickpunkt2);
   if (Bauteil=="") return;
@@ -349,6 +353,8 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
     Schaltung.appendChild(Kn);
     }
   document.getElementById("Logfile").firstChild.nodeValue=xm.serializeToString(Schaltung);
+  var AW=document.getElementById("Aufbauweg");
+  Aufbauweg.value=Aufbauweg.value+'Setz_ein("'+Bauteil+'",['+Klickpunkt1+'],['+Richtung+']);\n';
   }
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Rechenweg erzeugen
@@ -409,7 +415,13 @@ function Bauteil_in_Baukasten_auswaehlen() {
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">function Aufbauen()
 <script id="scr" type="application/ecmascript">
 function Aufbauen() {
+  onloadfun();
   eval(document.getElementById("Aufbauweg").value);
+  }
+
+function Abbauen() {
+  onloadfun();
+  document.getElementById("Aufbauweg").value="";
   }
 
 function Setz_ein(Bauteil,Klickpunkt,Richtung) {
