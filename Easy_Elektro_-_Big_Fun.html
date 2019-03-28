@@ -23,6 +23,7 @@ ok und jetzt aus Aufbauweg-Fenster heraus
 ok function Ergebnis_in_Grafik_ausgeben()
 ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
 ok Abbauen geht auch
+ok erster funktionierender Schalter
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
@@ -49,8 +50,9 @@ ok Abbauen geht auch
     <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
       </g>
-    <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" klickpunkte="[[0,0],[0,2]]">
+    <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" value2="10000000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
+      <path d="M50,0 h 30 l 15,-2 M 95,-1 v1 h 30" d2="M50,0 h 30 l 13,-8 M 95,-1 v1 h 30" stroke="black" fill="none"/>  
       </g>
     </g>
   <g id="Pfeil" stroke="red" fill="red" stroke-width="5" transform="translate(300,250) rotate(270)">
@@ -470,7 +472,24 @@ function Setz_ein(Bauteil,Klickpunkt,Richtung) {
   document.getElementById("Logfile").firstChild.nodeValue=xm.serializeToString(Schaltung);
   }
 
-</script></li></div>
-  </ol>
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Umschalten
+<script id="scr" type="application/ecmascript">
+function Schalter_umschalten() {
+  //alert("Schalter wird jetzt umgelegt");
+  var DX=event.currentTarget;
+  var DY=DX.getElementsByTagName("path")[0];
+  var HX=DX.getAttribute("value");
+  var HX2=DX.getAttribute("value2");
+  var HY=DY.getAttribute("d");
+  var HY2=DY.getAttribute("d2");
+  //alert(HX+"\n"+HX2+"\n"+HY+"\n"+HY2+"\n");
+  DX.setAttribute("value",HX2);
+  DX.setAttribute("value2",HX);
+  DY.setAttribute("d",HY2);
+  DY.setAttribute("d2",HY);
+  }
+
+</script></li>
+  </ol></div>
   </body>
   </html>
