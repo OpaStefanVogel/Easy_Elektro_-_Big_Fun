@@ -23,7 +23,7 @@ ok und jetzt aus Aufbauweg-Fenster heraus
 ok function Ergebnis_in_Grafik_ausgeben()
 ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
 ok Abbauen geht auch
-ok erster funktionierender Schalter
+ok erster funktionierender Schalter, mit gleich Ausrechnen
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
@@ -357,6 +357,8 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   document.getElementById("Logfile").firstChild.nodeValue=xm.serializeToString(Schaltung);
   var AW=document.getElementById("Aufbauweg");
   Aufbauweg.value=Aufbauweg.value+'Setz_ein("'+Bauteil+'",['+Klickpunkt1+'],['+Richtung+']);\n';
+  Erzeugen();
+  neu_berechnen();
   }
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Rechenweg erzeugen
@@ -419,6 +421,8 @@ function Bauteil_in_Baukasten_auswaehlen() {
 function Aufbauen() {
   onloadfun();
   eval(document.getElementById("Aufbauweg").value);
+  Erzeugen();
+  neu_berechnen();
   }
 
 function Abbauen() {
@@ -487,6 +491,8 @@ function Schalter_umschalten() {
   DX.setAttribute("value2",HX);
   DY.setAttribute("d",HY2);
   DY.setAttribute("d2",HY);
+  Erzeugen();
+  neu_berechnen();
   }
 
 </script></li>
