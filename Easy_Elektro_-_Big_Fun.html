@@ -24,6 +24,7 @@ ok function Ergebnis_in_Grafik_ausgeben()
 ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
 ok Abbauen geht auch
 ok erster funktionierender Schalter, mit gleich Ausrechnen
+ok Lampen leuchten
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
@@ -47,8 +48,10 @@ ok erster funktionierender Schalter, mit gleich Ausrechnen
     <g id="Bauteil_Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
       </g>
-    <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="78">
+    <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="Lampe_neu_zeichnen()">
       <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
+      <text x="70" y="43" stroke="yellow" fill="yellow"><tspan>0</tspan> V</text>
+      <circle cx="100" cy="0" r="1" fill="yellow"/>
       </g>
     <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" value2="10000000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
@@ -118,6 +121,8 @@ var Umax=0; //größte Batteriespannung zwecks Massepunktfestlegung
 var Masse=1; //Index Massepunkt
 var xm=new XMLSerializer();
 var showelement=0; //zu aktualisierendes Bauteil
+var Klickpunkt=0;
+var Richtung=0;
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Button neu rechnen
 <script id="scr" type="application/ecmascript">
@@ -413,6 +418,9 @@ function Ergebnis_in_Grafik_ausgeben() {
   for (var i=0;i<Dings.length;i++) {
     if (Dings[i].hasAttribute("show")) {
       showelement=Dings[i];
+      Klickpunkt=eval(showelement.getAttribute("klickpunkt"));
+      Richtung=eval(showelement.getAttribute("richtung"));
+      eval(showelement.getAttribute("show"));
       }
     }
   }
@@ -503,6 +511,14 @@ function Schalter_umschalten() {
   neu_berechnen();
   }
 
+</script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Lampe_neu_zeichnen()
+<script id="scr" type="application/ecmascript">
+function Lampe_neu_zeichnen() {
+  //alert('Lampe '+Klickpunkt+' '+Richtung+" "+x[ind(0,0)]+" "+x[ind(0,2)]);
+  var Lampenspannung=x[ind(0,0)]-x[ind(0,2)];
+  showelement.getElementsByTagName("tspan")[0].firstChild.nodeValue=Lampenspannung.toFixed(2);
+  showelement.getElementsByTagName("circle")[0].setAttribute("r",Math.abs(Lampenspannung)*10);
+  }
 </script></li>
   </ol></div>
   </body>
