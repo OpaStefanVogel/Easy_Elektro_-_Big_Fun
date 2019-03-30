@@ -47,7 +47,7 @@ ok erster funktionierender Schalter, mit gleich Ausrechnen
     <g id="Bauteil_Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
       </g>
-    <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]">
+    <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="78">
       <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
       </g>
     <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" value2="10000000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
@@ -117,6 +117,7 @@ var n=nanf;
 var Umax=0; //größte Batteriespannung zwecks Massepunktfestlegung
 var Masse=1; //Index Massepunkt
 var xm=new XMLSerializer();
+var showelement=0; //zu aktualisierendes Bauteil
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Button neu rechnen
 <script id="scr" type="application/ecmascript">
@@ -406,7 +407,14 @@ function Ergebnis_in_Grafik_ausgeben() {
       if (erg!=" ") erg=erg+" V";
       t.firstChild.nodeValue=erg;
       }
-    }  
+    }
+  var Dings=document.getElementById("Steckplaetze").getElementsByTagName("g");
+  //alert(Dings.length);
+  for (var i=0;i<Dings.length;i++) {
+    if (Dings[i].hasAttribute("show")) {
+      showelement=Dings[i];
+      }
+    }
   }
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil_in_Baukasten_auswaehlen()
