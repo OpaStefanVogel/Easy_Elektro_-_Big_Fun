@@ -29,7 +29,7 @@ ok kein NaN mehr bei vereinzeltem Draht oder Schalter
 ok wenn erster oder zweiter Klickpunkt daneben, gar nichts machen,
 ok Klickpunkte der zweiten Klickphase unauffälliger markieren
 ok statt Bauteil_Draht nur Draht
-.. anstelle "von nach" gleich "von Richtung" machen
+ok anstelle "von nach" gleich "von Richtung" machen
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -286,6 +286,16 @@ var Klickfarbe_red="red";
 var Klickfarbe_red2="DarkGray";
 var Klickfarbe_blue="DarkGray";
 
+function Richtung_bestimmen(Klickpunkt1,Klickpunkt2) {
+  var von=eval(Klickpunkt1);
+  var nach=eval(Klickpunkt2);
+  var Richtung=[0,1,0];
+  if (von[1]==nach[1]&&von[0]<nach[0]) Richtung=[1,0,1];
+  if (von[0]==nach[0]&&von[1]>nach[1]) Richtung=[0,-1,2];
+  if (von[1]==nach[1]&&von[0]>nach[0]) Richtung=[-1,0,3];
+  return Richtung; 
+  }
+
 function Klick_auf_Steckplatz() {
   var DZ=event.target.parentNode;
   var ID=DZ.getAttribute("id");
@@ -307,7 +317,7 @@ function Klick_auf_Steckplatz() {
           Klickpunkt2=ID;
           DZ.setAttribute("fill",Klickfarbe_blue);
           document.getElementById(Klickpunkt1).setAttribute("fill",Klickfarbe_red2);
-          Bauteil_einsetzen(Klickpunkt1,Klickpunkt2)
+          Bauteil_einsetzen(Bauteil,eval(Klickpunkt1),Richtung_bestimmen(Klickpunkt1,Klickpunkt2));
           }
       Klickphase=0;
       }
@@ -316,56 +326,10 @@ function Klick_auf_Steckplatz() {
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil einsetzen
 <script id="scr" type="application/ecmascript">
 var Bauteil="Batterie"; //"Draht";
-function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
-  //alert("Bauteil einsetzen von "+Klickpunkt1+" nach "+Klickpunkt2);
+function Bauteil_einsetzen(Bauteil,Klickpunkt,Richtung) {
+  //alert("Bauteil "+Bauteil+" einsetzen von "+Klickpunkt+" in Richtung "+Richtung);
   if (Bauteil=="") return;
-  var von=eval(Klickpunkt1);
-  var nach=eval(Klickpunkt2);
-  var Bild=document.getElementById(""+Bauteil).cloneNode(true);
-  var transform="translate("+(von[1]*100)+","+(von[0]*100)+") ";
-  var Richtung=[0,1,0];
-  if (von[1]==nach[1]&&von[0]<nach[0]) Richtung=[1,0,1];
-  if (von[0]==nach[0]&&von[1]>nach[1]) Richtung=[0,-1,2];
-  if (von[1]==nach[1]&&von[0]>nach[0]) Richtung=[-1,0,3];
-  transform=transform+"rotate("+(Richtung[2]*90)+")";
-  //alert(transform+" "+von+" "+nach);
-  Bild.setAttribute("class",Bild.getAttribute("id"));
-  Bild.removeAttribute("id");
-  Bild.setAttribute("transform",transform);
-  Bild.setAttribute("klickpunkt",Klickpunkt1);
-  Bild.setAttribute("richtung","["+Richtung+"]");
-  var Schaltung=document.getElementById("Steckplaetze");
-  Schaltung.appendChild(document.createTextNode("\n    "));
-  Schaltung.appendChild(Bild);
-  var Klickpunkte=eval(Bild.getAttribute("klickpunkte"));
-  //alert(von+" "+Klickpunkte+" "+Richtung);
-  var Kx=0;
-  var Ky=0;
-  var Kn="";
-  for (var KLP=0;KLP<Klickpunkte.length;KLP++) {
-    if (Richtung[2]==0) { //[0,1,0]
-      Ky=von[0]+Klickpunkte[KLP][0];
-      Kx=von[1]+Klickpunkte[KLP][1];
-      }
-    if (Richtung[2]==1) { //[1,0,1]
-      Ky=von[0]+Klickpunkte[KLP][1];
-      Kx=von[1]-Klickpunkte[KLP][0];
-      }
-    if (Richtung[2]==2) { //[0,-1,2]
-      Ky=von[0]-Klickpunkte[KLP][0];
-      Kx=von[1]-Klickpunkte[KLP][1];
-      }
-    if (Richtung[2]==3) { //[-1,0,3]
-      Ky=von[0]-Klickpunkte[KLP][1];
-      Kx=von[1]+Klickpunkte[KLP][0];
-      }
-    //alert([Kx,Ky]);
-    Kn=document.getElementById("["+[Ky,Kx]+"]");
-    Schaltung.removeChild(Kn.previousSibling);
-    Schaltung.appendChild(document.createTextNode("\n    "));
-    Schaltung.appendChild(Kn);
-    }
-  document.getElementById("Logfile").firstChild.nodeValue=xm.serializeToString(Schaltung);
+  Setz_ein(Bauteil,Klickpunkt,Richtung);
   var AW=document.getElementById("Aufbauweg");
   Aufbauweg.value=Aufbauweg.value+'Setz_ein("'+Bauteil+'",'+Klickpunkt1+',['+Richtung+']);\n';
   Erzeugen();
@@ -433,7 +397,7 @@ function Ergebnis_in_Grafik_ausgeben() {
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Bauteil_in_Baukasten_auswaehlen()
 <script id="scr" type="application/ecmascript">
 function Bauteil_in_Baukasten_auswaehlen() {
-  Bauteil=event.target.parentNode.getAttribute('id').slice(8);
+  Bauteil=event.target.parentNode.getAttribute('id');
   //alert(Bauteil+" "+event.target.parentNode.getAttribute('transform'));
   document.getElementById("Pfeil").setAttribute("transform",event.target.parentNode.getAttribute('transform'));
   }
