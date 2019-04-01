@@ -27,7 +27,7 @@ ok erster funktionierender Schalter, mit gleich Ausrechnen
 ok Lampen leuchten
 ok kein NaN mehr bei vereinzeltem Draht oder Schalter
 ok wenn erster oder zweiter Klickpunkt daneben, gar nichts machen,
-.. auch zweiten Klickpunkt nicht markieren
+ok Klickpunkte der zweiten Klickphase unauffälliger markieren
 .. anstelle "von nach" gleich "von Richtung" machen
 .. statt Bauteil_Draht nur Draht
   </div>
@@ -283,7 +283,8 @@ var Klickpunkt2="";
 var Klickphase=0; //0 oder 1
 var Klickfarbe_gray="gray";
 var Klickfarbe_red="red";
-var Klickfarbe_blue="orange";
+var Klickfarbe_red2="DarkGray";
+var Klickfarbe_blue="DarkGray";
 
 function Klick_auf_Steckplatz() {
   var DZ=event.target.parentNode;
@@ -305,6 +306,7 @@ function Klick_auf_Steckplatz() {
         } else {
           Klickpunkt2=ID;
           DZ.setAttribute("fill",Klickfarbe_blue);
+          document.getElementById(Klickpunkt1).setAttribute("fill",Klickfarbe_red2);
           Bauteil_einsetzen(Klickpunkt1,Klickpunkt2)
           }
       Klickphase=0;
