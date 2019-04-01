@@ -25,11 +25,11 @@ ok angeklicktes Baukastenelement markieren, mit Anfangs- und Zweitklickpunkt
 ok Abbauen geht auch
 ok erster funktionierender Schalter, mit gleich Ausrechnen
 ok Lampen leuchten
+ok kein NaN mehr bei vereinzeltem Draht oder Schalter
 .. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
 .. statt Bauteil_Draht nur Draht
-.. NaN bei vereinzeltem Draht
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -39,7 +39,7 @@ ok Lampen leuchten
   xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Baukasten</title>
   <g onclick="Bauteil_in_Baukasten_auswaehlen()">
-    <g id="Bauteil_Draht" class="" transform="translate(200,250) rotate(270)" code="R(ind(0,0),ind(0,1),value)" value="0.0000000001" klickpunkte="[[0,0],[0,1]]">
+    <g id="Bauteil_Draht" class="" transform="translate(200,250) rotate(270)" code="R(ind(0,0),ind(0,1),value)" value="0.00000001" klickpunkte="[[0,0],[0,1]]">
       <circle cx="0" cy="0" r="20" fill="Blue"/>
       <circle cx="100" cy="0" r="20" fill="Blue"/>
       <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
@@ -53,7 +53,7 @@ ok Lampen leuchten
       <text x="70" y="43" stroke="yellow" fill="yellow"><tspan>0</tspan> V</text>
       <circle cx="100" cy="0" r="1" fill="yellow"/>
       </g>
-    <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.0000000001" value2="10000000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
+    <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.00000001" value2="10000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
       <path d="M50,0 h 30 l 15,-2 M 95,-1 v1 h 30" d2="M50,0 h 30 l 13,-8 M 95,-1 v1 h 30" stroke="black" fill="none"/>  
       </g>
@@ -94,6 +94,9 @@ Setz_ein("Draht",[5,7],[0,1,0]);
 Setz_ein("Draht",[3,7],[0,1,0]);
 Setz_ein("Draht",[5,4],[0,1,0]);
 Setz_ein("Draht",[3,4],[0,1,0]);
+Setz_ein("Lampe",[2,5],[0,1,0]);
+Setz_ein("Draht",[3,5],[-1,0,3]);
+Setz_ein("Draht",[3,7],[-1,0,3]);
 </textarea></div>
 <div>
 <button onclick="Erzeugen()">Erzeugen</button>
@@ -163,7 +166,7 @@ function neu_berechnen() {
   A=[]; b=[]; n=nanf;
   for (i=0;i<=n;i++) {
     A[i]=[]; b[i]=0;
-    for (j=0;j<=n;j++) if (i==j) A[i][j]=0.00000000001; else A[i][j]=0;
+    for (j=0;j<=n;j++) if (i==j) A[i][j]=0.00000001; else A[i][j]=0;
     }
   //alert(A.join("\n"));
   Rechenweg=document.getElementById("Rechenweg").value;
@@ -177,7 +180,7 @@ function neu_berechnen() {
       if (A[i][j]==undefined) A[i][j]=0;
       }
     }
-  //alert(A.join("\n")+"\nb="+b+"\nn="+n);
+  //alert(A.join("\n#\n")+"\nb="+b+"\nn="+n);
   x=gauss(A,b);
   //alert(x.join("\n"));
   //alert("und fertig");
@@ -290,7 +293,7 @@ function Klick_auf_Steckplatz() {
   if (Klickphase==0) {
     if (KI1) KI1.setAttribute("fill",Klickfarbe_gray);
     if (KI2) KI2.setAttribute("fill",Klickfarbe_gray);
-    Klickpunkt1=ID;
+    Klickpunkt1=ID;//alert(ID);
     Klickpunkt2="";
     DZ.setAttribute("fill",Klickfarbe_red);
     Klickphase=1;
@@ -362,7 +365,7 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
     }
   document.getElementById("Logfile").firstChild.nodeValue=xm.serializeToString(Schaltung);
   var AW=document.getElementById("Aufbauweg");
-  Aufbauweg.value=Aufbauweg.value+'Setz_ein("'+Bauteil+'",['+Klickpunkt1+'],['+Richtung+']);\n';
+  Aufbauweg.value=Aufbauweg.value+'Setz_ein("'+Bauteil+'",'+Klickpunkt1+',['+Richtung+']);\n';
   Erzeugen();
   neu_berechnen();
   }
@@ -521,5 +524,15 @@ function Lampe_neu_zeichnen() {
   }
 </script></li>
   </ol></div>
-  </body>
+  <INPUT name="edit1" size="50">
+    <SCRIPT type="text/tcl">
+      proc edit1_changed {} {
+        if {[edit value] == abc} {
+          button1 enable 1
+        } else {
+          button1 enable 0
+        }
+      }
+      edit1 onChange edit1_changed
+    </SCRIPT>  </body>
   </html>
