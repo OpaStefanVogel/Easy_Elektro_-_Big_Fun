@@ -28,8 +28,8 @@ ok Lampen leuchten
 ok kein NaN mehr bei vereinzeltem Draht oder Schalter
 ok wenn erster oder zweiter Klickpunkt daneben, gar nichts machen,
 ok Klickpunkte der zweiten Klickphase unauffälliger markieren
+ok statt Bauteil_Draht nur Draht
 .. anstelle "von nach" gleich "von Richtung" machen
-.. statt Bauteil_Draht nur Draht
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -39,21 +39,21 @@ ok Klickpunkte der zweiten Klickphase unauffälliger markieren
   xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Baukasten</title>
   <g onclick="Bauteil_in_Baukasten_auswaehlen()">
-    <g id="Bauteil_Draht" class="" transform="translate(200,250) rotate(270)" code="R(ind(0,0),ind(0,1),value)" value="0.00000001" klickpunkte="[[0,0],[0,1]]">
+    <g id="Draht" class="" transform="translate(200,250) rotate(270)" code="R(ind(0,0),ind(0,1),value)" value="0.00000001" klickpunkte="[[0,0],[0,1]]">
       <circle cx="0" cy="0" r="20" fill="Blue"/>
       <circle cx="100" cy="0" r="20" fill="Blue"/>
       <line x1="0" y1="0" x2="100" y2="0" stroke="Blue" stroke-width="20"/>
       <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
       </g>      
-    <g id="Bauteil_Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
+    <g id="Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
       </g>
-    <g id="Bauteil_Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="Lampe_neu_zeichnen()">
+    <g id="Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="Lampe_neu_zeichnen()">
       <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
       <text x="70" y="43" stroke="yellow" fill="yellow"><tspan>0</tspan> V</text>
       <circle cx="100" cy="0" r="1" fill="yellow"/>
       </g>
-    <g id="Bauteil_Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.00000001" value2="10000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
+    <g id="Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.00000001" value2="10000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
       <path d="M50,0 h 30 l 15,-2 M 95,-1 v1 h 30" d2="M50,0 h 30 l 13,-8 M 95,-1 v1 h 30" stroke="black" fill="none"/>  
       </g>
@@ -321,7 +321,7 @@ function Bauteil_einsetzen(Klickpunkt1,Klickpunkt2) {
   if (Bauteil=="") return;
   var von=eval(Klickpunkt1);
   var nach=eval(Klickpunkt2);
-  var Bild=document.getElementById("Bauteil_"+Bauteil).cloneNode(true);
+  var Bild=document.getElementById(""+Bauteil).cloneNode(true);
   var transform="translate("+(von[1]*100)+","+(von[0]*100)+") ";
   var Richtung=[0,1,0];
   if (von[1]==nach[1]&&von[0]<nach[0]) Richtung=[1,0,1];
@@ -454,7 +454,7 @@ function Abbauen() {
 function Setz_ein(Bauteil,Klickpunkt,Richtung) {
   //alert(Bauteil+" "+Klickpunkt+" "+Richtung);
   var von=Klickpunkt;
-  var Bild=document.getElementById("Bauteil_"+Bauteil).cloneNode(true);
+  var Bild=document.getElementById(""+Bauteil).cloneNode(true);
   var transform="translate("+(von[1]*100)+","+(von[0]*100)+") ";
   transform=transform+"rotate("+(Richtung[2]*90)+")";
   //alert(transform+" "+von+" "+Richtung);
