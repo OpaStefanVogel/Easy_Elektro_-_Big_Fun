@@ -26,7 +26,7 @@ ok Abbauen geht auch
 ok erster funktionierender Schalter, mit gleich Ausrechnen
 ok Lampen leuchten
 ok kein NaN mehr bei vereinzeltem Draht oder Schalter
-.. wenn zweiter Klickpunkt daneben, gar nichts zeichnen,
+ok wenn erster oder zweiter Klickpunkt daneben, gar nichts machen,
 .. auch zweiten Klickpunkt nicht markieren
 .. anstelle "von nach" gleich "von Richtung" machen
 .. statt Bauteil_Draht nur Draht
@@ -290,7 +290,7 @@ function Klick_auf_Steckplatz() {
   var ID=DZ.getAttribute("id");
   var KI1=document.getElementById(Klickpunkt1);
   var KI2=document.getElementById(Klickpunkt2);
-  if (Klickphase==0) {
+  if (ID) if (Klickphase==0) {
     if (KI1) KI1.setAttribute("fill",Klickfarbe_gray);
     if (KI2) KI2.setAttribute("fill",Klickfarbe_gray);
     Klickpunkt1=ID;//alert(ID);
