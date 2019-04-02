@@ -57,6 +57,12 @@ ok anstelle "von nach" gleich "von Richtung" machen
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
       <path d="M50,0 h 30 l 15,-2 M 95,-1 v1 h 30" d2="M50,0 h 30 l 13,-8 M 95,-1 v1 h 30" stroke="black" fill="none"/>  
       </g>
+    <g id="Widerstand" class="" transform="translate(700,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="10000" klickpunkte="[[0,0],[0,2]]">
+      <rect x="-45" y="-45" width="290" height="90" stroke="brown" fill="white"/>
+      </g>
+    <g id="Transistor npn" class="" transform="translate(900,250) rotate(270)" code="T(ind(0,2),ind(0,0),ind(-1,1),value); R(ind(-1,1),ind(0,0),100)" value="3" klickpunkte="[[0,0],[0,2],[-1,1]]">
+      <rect x="-45" y="-145" width="290" height="190" stroke="blue" fill="white"/>
+      </g>
     </g>
   <g id="Pfeil" stroke="red" fill="red" stroke-width="5" transform="translate(300,250) rotate(270)">
     <line x1="0" y1="0" x2="100" y2="0"/>
@@ -97,6 +103,24 @@ Setz_ein("Draht",[3,4],[0,1,0]);
 Setz_ein("Lampe",[2,5],[0,1,0]);
 Setz_ein("Draht",[3,5],[-1,0,3]);
 Setz_ein("Draht",[3,7],[-1,0,3]);
+Setz_ein("Transistor npn",[7,3],[-1,0,3]);
+Setz_ein("Lampe",[4,3],[-1,0,3]);
+Setz_ein("Widerstand",[6,1],[-1,0,3]);
+Setz_ein("Draht",[2,5],[0,-1,2]);
+Setz_ein("Draht",[2,4],[0,-1,2]);
+Setz_ein("Draht",[4,3],[1,0,1]);
+Setz_ein("Draht",[7,3],[0,1,0]);
+Setz_ein("Draht",[7,4],[0,1,0]);
+Setz_ein("Draht",[7,5],[0,1,0]);
+Setz_ein("Draht",[7,6],[0,1,0]);
+Setz_ein("Draht",[7,7],[0,1,0]);
+Setz_ein("Draht",[7,8],[-1,0,3]);
+Setz_ein("Draht",[6,8],[-1,0,3]);
+Setz_ein("Draht",[4,1],[-1,0,3]);
+Setz_ein("Draht",[3,1],[-1,0,3]);
+Setz_ein("Draht",[2,1],[0,1,0]);
+Setz_ein("Draht",[2,2],[0,1,0]);
+Setz_ein("Draht",[6,1],[0,1,0]);
 </textarea></div>
 <div>
 <button onclick="Erzeugen()">Erzeugen</button>
@@ -357,9 +381,9 @@ function Erzeugen(){
 function ind(i,j) {
   var ret=10*(Klickpunkt[0]-1)+Klickpunkt[1]-1;
   if (Richtung[2]==0) ret=ret+10*i+j;
-  if (Richtung[2]==1) ret=ret+10*j+i;
+  if (Richtung[2]==1) ret=ret+10*j-i;
   if (Richtung[2]==2) ret=ret-10*i-j;
-  if (Richtung[2]==3) ret=ret-10*j-i;
+  if (Richtung[2]==3) ret=ret-10*j+i;
   //alert(ret);
   return ret;
   }
