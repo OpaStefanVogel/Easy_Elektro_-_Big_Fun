@@ -87,6 +87,10 @@ ok anstelle "von nach" gleich "von Richtung" machen
   <g id="Schaltung"> </g>
   <g id="Steckplaetze" onclick="Klick_auf_Steckplatz()" fill="gray">
     </g>
+  <g id="Pfeil2" stroke="red" fill="red" stroke-width="5" transform="translate(0,0) rotate(0)">
+    <line x1="0" y1="0" x2="100" y2="0"/>
+    <polygon points="110,0 100,10 100,-10"/>
+    </g>
   </svg>
 <div>
 <button onclick="Aufbauen()">Aufbauen</button>
@@ -323,6 +327,13 @@ function Richtung_bestimmen(Klickpunkt1,Klickpunkt2) {
 function Klick_auf_Steckplatz() {
   var DZ=event.target.parentNode;
   var ID=DZ.getAttribute("id");
+  var TRANS=DZ.getAttribute("transform");
+  var PFEIL2=document.getElementById("Pfeil2");
+  if (DZ.hasAttribute("class")) {
+    PFEIL2.setAttribute("transform",TRANS);
+    document.getElementById("Pfeil").removeAttribute("transform");
+    Bauteil=DZ.getAttribute("class");
+    }
   var KI1=document.getElementById(Klickpunkt1);
   var KI2=document.getElementById(Klickpunkt2);
   if (ID) if (Klickphase==0) {
@@ -424,6 +435,7 @@ function Bauteil_in_Baukasten_auswaehlen() {
   Bauteil=event.target.parentNode.getAttribute('id');
   //alert(Bauteil+" "+event.target.parentNode.getAttribute('transform'));
   document.getElementById("Pfeil").setAttribute("transform",event.target.parentNode.getAttribute('transform'));
+  document.getElementById("Pfeil2").removeAttribute("transform");
   }
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">function Aufbauen()
 <script id="scr" type="application/ecmascript">
@@ -442,7 +454,7 @@ function Abbauen() {
 function Setz_ein(Bauteil,Klickpunkt,Richtung) {
   //alert(Bauteil+" "+Klickpunkt+" "+Richtung);
   var von=Klickpunkt;
-  var Bild=document.getElementById(""+Bauteil).cloneNode(true);
+  var Bild=document.getElementById(Bauteil).cloneNode(true);
   var transform="translate("+(von[1]*100)+","+(von[0]*100)+") ";
   transform=transform+"rotate("+(Richtung[2]*90)+")";
   //alert(transform+" "+von+" "+Richtung);
