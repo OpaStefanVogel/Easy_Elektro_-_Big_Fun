@@ -35,7 +35,8 @@ ok Draht mit erstem animierten Strom
 ok beim Schalter stört Markierung für nächstes Bauelement ok Pfeil kleiner
 ok mA und μA
 .. mV und μV
-.. bei Draht, Lampe, Schalter und so weiter Schrift nur unten oder rechts
+ok nur bei Draht Schrift unten oder rechts
+.. Grafik weiter verbessern
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -463,6 +464,12 @@ function Abbauen() {
 
 function Setz_ein(Bauteil,Klickpunkt,Richtung) {
   //alert(Bauteil+" "+Klickpunkt+" "+Richtung);
+  var Klickpunkt=Klickpunkt;
+  var Richtung=Richtung;
+  if (Bauteil=="Draht") {
+    if (Richtung[2]==1) {Richtung[2]=3; Klickpunkt[0]=Klickpunkt[0]+1}
+    if (Richtung[2]==2) {Richtung[2]=0; Klickpunkt[1]=Klickpunkt[1]-1}
+    }
   var von=Klickpunkt;
   var Bild=document.getElementById(Bauteil).cloneNode(true);
   var transform="translate("+(von[1]*100)+","+(von[0]*100)+") ";
