@@ -36,7 +36,7 @@ ok beim Schalter stört Markierung für nächstes Bauelement ok Pfeil kleiner
 ok mA und μA
 .. mV und μV
 ok nur bei Draht Schrift unten oder rechts
-.. Grafik weiter verbessern
+.. Grafik weiter verbessern, Lampe drehend sieht nicht so gut aus.
   </div>
 <svg id="Baukasten" 
   width="100%" height="120" 
@@ -60,9 +60,11 @@ ok nur bei Draht Schrift unten oder rechts
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
       </g>
     <g id="Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="Lampe_neu_zeichnen()">
-      <rect x="-45" y="-45" width="290" height="90" stroke="yellow" fill="white"/>
-      <text x="70" y="43" stroke="yellow" fill="yellow"><tspan>0</tspan> V</text>
-      <circle cx="100" cy="0" r="1" fill="yellow"/>
+      <rect x="-45" y="-45" width="290" height="90" stroke="orange" fill="white"/>
+      <text x="70" y="43" stroke="orange" fill="orange"><tspan>0</tspan> V</text>
+      <circle cx="100" cy="0" r="1" stroke="orange" fill="none" stroke-width="10" stroke-dasharray="3.1415,3.1415" stroke-dashoffset="0">
+        <animate attributeName="stroke-dashoffset" from="0" to="6283" dur="3000" repeatCount="indefinite"/>
+        </circle>
       </g>
     <g id="Schalter" class="" transform="translate(600,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="0.00000001" value2="10000000" klickpunkte="[[0,0],[0,2]]" onclick="Schalter_umschalten()">
       <rect x="-45" y="-45" width="290" height="90" stroke="green" fill="white"/>
@@ -537,9 +539,11 @@ function Schalter_umschalten() {
 <script id="scr" type="application/ecmascript">
 function Lampe_neu_zeichnen() {
   //alert('Lampe '+Klickpunkt+' '+Richtung+" "+x[ind(0,0)]+" "+x[ind(0,2)]);
-  var Lampenspannung=x[ind(0,0)]-x[ind(0,2)];
+  var Lampenspannung=Math.abs(x[ind(0,0)]-x[ind(0,2)]);
   showelement.getElementsByTagName("tspan")[0].firstChild.nodeValue=Lampenspannung.toFixed(2);
-  showelement.getElementsByTagName("circle")[0].setAttribute("r",Math.abs(Lampenspannung)*10);
+  showelement.getElementsByTagName("circle")[0].setAttribute("r",Lampenspannung*10);
+  showelement.getElementsByTagName("circle")[0].setAttribute("stroke-width",Lampenspannung*18);
+  showelement.getElementsByTagName("circle")[0].setAttribute("stroke-dasharray",Lampenspannung*0.31415+","+Lampenspannung*0.31415);
   }
 
 function Draht_neu_zeichnen() {
