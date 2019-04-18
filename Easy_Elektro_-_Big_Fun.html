@@ -56,8 +56,11 @@ ok nur bei Draht Schrift unten oder rechts
       <text x="29" y="27" stroke="blue" fill="blue"><tspan>0</tspan> <tspan>A</tspan></text>
       <!--line x1="0" y1="0" x2="100" y2="0" stroke="White" stroke-width="10" stroke-linecap="round"/-->
       </g>      
-    <g id="Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]">
+    <g id="Batterie" class="" transform="translate(300,250) rotate(270)" code="U(ind(0,0),ind(0,2),value)" value="3" klickpunkte="[[0,0],[0,2]]" show="Batterie_neu_zeichnen()">
       <rect x="-45" y="-45" width="290" height="190" stroke="violet" fill="white"/>
+      <rect x="15" y="15" width="150" height="40" stroke="violet" fill="violet"/>
+      <rect x="15" y="65" width="150" height="40" stroke="violet" fill="violet"/>
+      <path d="M0,0 L 200,100 M0,100 L200,0" stroke="red" fill="none" stroke-width="10" style="display:none"/>  
       </g>
     <g id="Lampe" class="" transform="translate(500,250) rotate(270)" code="R(ind(0,0),ind(0,2),value)" value="100" klickpunkte="[[0,0],[0,2]]" show="Lampe_neu_zeichnen()">
       <rect x="-45" y="-45" width="290" height="90" stroke="orange" fill="white"/>
@@ -167,6 +170,7 @@ var xm=new XMLSerializer();
 var showelement=0; //zu aktualisierendes Bauteil
 var Klickpunkt=0;
 var Richtung=0;
+var Zusatzindex=nanf;
 
 </script></li><li onclick="Klick_auf_Gliederungspunkt(event)">Button neu rechnen
 <script id="scr" type="application/ecmascript">
@@ -416,6 +420,7 @@ function ind(i,j) {
 <script id="scr" type="application/ecmascript">
 function Ergebnis_in_Grafik_ausgeben() {
   //alert("Ergebnis_in_Grafik_ausgeben()");
+  Zusatzindex=nanf;
   for (var i=1;i<=7;i++) {
     for (var j=1;j<=10;j++) {
       var t=document.getElementById("["+i+","+j+"]").getElementsByTagName("text")[0];
@@ -566,6 +571,25 @@ function Draht_neu_zeichnen() {
   AL.setAttribute("to",to);
   AL.parentNode.setAttribute("stroke-width",Breite);
   }
+
+function Batterie_neu_zeichnen() {
+  Zusatzindex=Zusatzindex+1;
+  //alert('Batterie '+Klickpunkt+' '+Richtung+" "+x[ind(0,0)]+" "+x[ind(0,2)]+"\n"+Zusatzindex+" "+x[Zusatzindex]);
+  var Leistung=Math.abs(x[Zusatzindex]*(x[ind(0,2)]-x[ind(0,0)]));
+  if (Leistung>1000) {
+    //alert("Batterieleistung="+Leistung);
+    showelement.setAttribute("value",0);
+    showelement.getElementsByTagName("path")[0].removeAttribute("style");
+    }
+/*
+  var Lampenspannung=Math.abs(x[ind(0,0)]-x[ind(0,2)]);
+  showelement.getElementsByTagName("tspan")[0].firstChild.nodeValue=Lampenspannung.toFixed(2);
+  showelement.getElementsByTagName("circle")[0].setAttribute("r",Lampenspannung*10);
+  showelement.getElementsByTagName("circle")[0].setAttribute("stroke-width",Lampenspannung*18);
+  showelement.getElementsByTagName("circle")[0].setAttribute("stroke-dasharray",Lampenspannung*0.31415+","+Lampenspannung*0.31415);
+*/
+  }
+
 </script></li>
   </ol></div>
   <INPUT name="edit1" size="50">
